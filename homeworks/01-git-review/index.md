@@ -25,6 +25,10 @@
     - creating folders and files  
     - initializing repositories (local)
     - staging and commiting files
+    - creating branches
+    - head
+    - merging
+    - conflicts
 
 &nbsp;
 ## *Day 2 - Tuesday*
@@ -38,25 +42,52 @@
 
 &nbsp;
 * HTML basics
-    - HTTPS, DNS
+    - VS code setup
+    - HTTPS, DNS, TCP/IP
+    - URI
     - HTML structure
     - tags
+    - atributes
+    - HTML entities
     - semantic
     - ARIA
 
 &nbsp; 
 ## *Day 3 - Wednesday*
 * HTML/CSS
+    - HTML text formating
+    - browser default styles
+    - CSS units
     - fonts
     - colors
     - applying CSS (inline, external, internal)
     - CSS selectors
+    - shorthand propierties
+    - CSS cascade
+    - inheritance
+    - pseudo selectors
+    - pseudo elements
+    - custom properties
+    - BEM
+
 
 &nbsp;
 ## *Day 4 - Thursday*
 * HTML/CSS
-    - box-model
+    - JPEG, GIF, PNG
+    - favicon
     - inserting and modeling images
+    - background
+    - box-shadow
+    - lazy-loading and preloading
+    - box-model
+    - box-sizing
+    - margin, padding
+    - border
+    - display
+    - position
+    - z-index
+    - gradient
 
 &nbsp;
 ## *Day 5 - Friday*
