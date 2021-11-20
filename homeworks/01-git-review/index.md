@@ -1,9 +1,4 @@
-# Knowledge check from first week
-## Related files :
-* [Skills](skills.md)
-* [Links](links.md)
-
-&nbsp;
+# Knowledge check from first week 
 ### Navigation
 
 &nbsp;
