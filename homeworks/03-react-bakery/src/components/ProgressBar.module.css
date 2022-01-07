@@ -1,0 +1,9 @@
+.container {
+  width: 100px;
+  background: gray;
+}
+
+.progress {
+  height: 10px;
+  background: green;
+}
