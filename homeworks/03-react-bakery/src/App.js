@@ -87,7 +87,7 @@ export const App = () => {
         </button>
         {ovenIsFull && <span style={{color: "red"}}>Piec jest pełen</span>}
       </p>
-      <p>Luczba ciastek w piecu: {ovenCookies.length}/9</p>
+      <p>Liczba ciastek w piecu: {ovenCookies.length}/9</p>
       <Oven cookies={ovenCookies}/>
     </div>
   );

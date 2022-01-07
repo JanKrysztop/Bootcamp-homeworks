@@ -1,8 +1,20 @@
 import { useEffect, useState } from "react";
 
-const cellIds = Array.from({ length: 9}, (_, index) => index);
 
-export const Oven = () => {
+export const Oven = ({ cookies }) => {
+  const [slots, setSlots] = useState(Array.from({length: 9}));
+
+  useEffect(() => {
+    setSlots((slots) => {
+      const cookiesWithNoSlots = cookies.filter((cookie) => 
+        slots.every((slot) => slot !== cookie)
+      );
+      return slots.map((slot) =>
+        slot === undefined ? cookiesWithNoSlots.pop() : slot
+      );
+    })
+  }, [cookies]);
+
   return (
     <div
       style={{
@@ -11,11 +23,29 @@ export const Oven = () => {
         gridTemplateRows: "repeat(3, 1fr)",
       }}
     >
-      {cellIds.map((id) => (
+      {slots.map((slot, index) => (
         <div
-          key={id}
-          style={{width: 50, height: 50, border: "1px solid brown"}}
-        ></div>
+          key={index}
+          style={{
+            width: 50, 
+            height: 50, 
+            border: "1px solid brown",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {slot && (
+            <div
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: "50%",
+                background: "black",
+              }}
+            ></div>
+          )}
+        </div>
       ))}
     </div>
   );
