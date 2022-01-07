@@ -4,6 +4,7 @@ import { ProgressBar } from "./ProgressBar";
 export const FormDoughBall = (props) => {
   const [shouldFormDoughBalls, setShouldFormDoughBalls] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [doughBallsCounter, setDoughBallsCounter] = useState(0);
 
 
   useEffect(() => {
@@ -12,8 +13,15 @@ export const FormDoughBall = (props) => {
     }
 
     const id = setInterval(() => {
-      setProgress((oldProgress) => oldProgress === 1 ? 0 : oldProgress + 0.25);
+      setProgress((oldProgress) => {
+        if (oldProgress === 1) {
+          setDoughBallsCounter((counter) => counter + 1);
+          return 0;
+        }
+        return oldProgress + 0.25;
+      });
     }, 1000);
+
     return () => {
       clearInterval(id);
     };
@@ -25,6 +33,7 @@ export const FormDoughBall = (props) => {
 
   return (
     <div>
+      <p>Liczba ulepionych ciastowych kul: {doughBallsCounter}</p>
       <ProgressBar progress={progress}/>
       <button onClick={handleClick}>
         {shouldFormDoughBalls === false 
