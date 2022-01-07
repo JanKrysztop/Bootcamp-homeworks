@@ -1,16 +1,24 @@
 import { useState, useCallback } from "react";
 import { FormDoughBall } from "./components/FormDoughBall";
 import { DoughBall } from "./components/DoughBall";
+import { Oven } from "./components/Oven";
 
 const flourPerDoughBall = 10;
+
+let lastId = 0;
+const getNextId = () => lastId++;
 
 export const App = () => {
   const [doughBalls, setDoughBalls] = useState([]);
   const [flourCounter, setFlourCounter] = useState(100);
   const [isFlourAtHand, setIsFlourAtHand] = useState(false);
   const [rawCookieCounter, setRawCookieCounter] = useState(0);
+  const [ovenCookies, setOvenCookies] = useState([]);
 
   const notEnoughFlour = flourCounter < flourPerDoughBall;
+  const noMoreRawCookies = rawCookieCounter === 0;
+  const ovenIsFull = ovenCookies.length === 9;
+  const cannotPutCookieInOven = noMoreRawCookies || ovenIsFull;
 
   const consumeFlour = useCallback(() => {
     if (notEnoughFlour) {
@@ -44,6 +52,17 @@ export const App = () => {
     );
   }, []);
 
+  const putCookieInOven = useCallback(() => {
+    if (cannotPutCookieInOven) {
+      return;
+    }
+    setRawCookieCounter((value) => value - 1);
+    setOvenCookies((existing) => [
+      ...existing,
+      { startedAt: Date.now(), id: getNextId() },
+    ]);
+  }, [cannotPutCookieInOven]);
+
   return (
     <div>
       <h1>React Bakery</h1>
@@ -62,6 +81,14 @@ export const App = () => {
         })}
       </div>
       <p>Liczba ulepionych ciastek: {rawCookieCounter}</p>
+      <p>
+        <button onClick={putCookieInOven} disabled={ovenIsFull}>
+          Włóż ciastko do pieca
+        </button>
+        {ovenIsFull && <span style={{color: "red"}}>Piec jest pełen</span>}
+      </p>
+      <p>Luczba ciastek w piecu: {ovenCookies.length}/9</p>
+      <Oven cookies={ovenCookies}/>
     </div>
   );
 };

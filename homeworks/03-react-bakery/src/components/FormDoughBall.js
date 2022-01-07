@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { ProgressBar } from "./ProgressBar";
 
-
-
 export const FormDoughBall = ({
   hasIngredients,
   consumeIngredients,
@@ -10,7 +8,7 @@ export const FormDoughBall = ({
 }) => {
   const [shouldFormDoughBalls, setShouldFormDoughBalls] = useState(false);
   const [progress, setProgress] = useState(0);
-  
+
   useEffect(() => {
     if (progress === 1) {
       onDoughBallReady();
