@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Cookie } from "./Cookie";
 
 
 export const Oven = ({ cookies }) => {
@@ -23,7 +24,7 @@ export const Oven = ({ cookies }) => {
         gridTemplateRows: "repeat(3, 1fr)",
       }}
     >
-      {slots.map((slot, index) => (
+      {slots.map((cookie, index) => (
         <div
           key={index}
           style={{
@@ -35,15 +36,10 @@ export const Oven = ({ cookies }) => {
             justifyContent: "center",
           }}
         >
-          {slot && (
-            <div
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: "50%",
-                background: "black",
-              }}
-            ></div>
+          {cookie && (
+            <Cookie
+              insertedAt={cookie.insertedAt}
+            />
           )}
         </div>
       ))}

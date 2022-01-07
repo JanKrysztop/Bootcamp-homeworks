@@ -3,6 +3,7 @@ import { FormDoughBall } from "./components/FormDoughBall";
 import { DoughBall } from "./components/DoughBall";
 import { Oven } from "./components/Oven";
 
+
 const flourPerDoughBall = 10;
 
 let lastId = 0;
@@ -59,7 +60,7 @@ export const App = () => {
     setRawCookieCounter((value) => value - 1);
     setOvenCookies((existing) => [
       ...existing,
-      { startedAt: Date.now(), id: getNextId() },
+      { insertedAt: Date.now(), id: getNextId() },
     ]);
   }, [cannotPutCookieInOven]);
 
