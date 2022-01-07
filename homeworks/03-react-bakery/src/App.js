@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { FormDoughBall } from "./components/FormDoughBall";
+import { DoughBall } from "./components/DoughBall";
 
 const flourPerDoughBall = 10;
 
@@ -27,6 +28,22 @@ export const App = () => {
     setIsFlourAtHand(false);
   }, []);
 
+  const handleBallClick = useCallback((ballId) => {
+    setRawCookieCounter((value) => value + 1);
+    setDoughBalls((doughBalls) =>
+      doughBalls
+        .map((doughBall) =>
+          doughBall.id === ballId
+            ? {
+                ...doughBall,
+                size: doughBall.size - 5,
+              }
+            : doughBall
+        )
+        .filter((ball) => ball.size > 0)
+    );
+  }, []);
+
   return (
     <div>
       <h1>React Bakery</h1>
@@ -37,43 +54,10 @@ export const App = () => {
         consumeIngredients={consumeFlour}
         onDoughBallReady={registerNewDoughBall}
       />
-      <div style={{display: "flex"}}>
+      <div style={{ display: "flex" }}>
         {doughBalls.map((ball) => {
           return (
-            <div
-              key={ball.id}
-              style={{
-                width: 50,
-                height: 50,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              onClick={() => {
-                setRawCookieCounter((value) => value + 1);
-                setDoughBalls((doughBalls) => 
-                doughBalls
-                  .map((doughBall) => 
-                    doughBall.id === ball.id
-                      ? {
-                        ...doughBall,
-                        size: doughBall.size - 5,
-                        }
-                      : doughBall
-                  )
-                  .filter((ball) => ball.size > 0)
-                );
-              }}
-            >
-              <div
-                style={{
-                  background: "yellow",
-                  width: ball.size,
-                  height: ball.size,
-                  borderRadius: "50%",
-                }}
-              />
-            </div> 
+            <DoughBall key={ball.id} ball={ball} onClick={handleBallClick} />
           );
         })}
       </div>
