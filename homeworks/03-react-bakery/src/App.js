@@ -1,8 +1,8 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { FormDoughBall } from "./components/FormDoughBall";
 import { DoughBall } from "./components/DoughBall";
-import { Oven } from "./components/Oven";
-
+import { Oven, ovenCapacity } from "./components/Oven";
+import { getCookieStatus } from "./getCookieStatus";
 
 const flourPerDoughBall = 10;
 
@@ -15,10 +15,13 @@ export const App = () => {
   const [isFlourAtHand, setIsFlourAtHand] = useState(false);
   const [rawCookieCounter, setRawCookieCounter] = useState(0);
   const [ovenCookies, setOvenCookies] = useState([]);
+  const [sellableCookiesCounter, setSellableCookiesCounter] = useState(0);
+  const [cash, setCash] = useState(0);
+  const [reqestedCookiesNumber, setRequestedCookiesNumber] = useState(0)
 
   const notEnoughFlour = flourCounter < flourPerDoughBall;
   const noMoreRawCookies = rawCookieCounter === 0;
-  const ovenIsFull = ovenCookies.length === 9;
+  const ovenIsFull = ovenCookies.length === ovenCapacity;
   const cannotPutCookieInOven = noMoreRawCookies || ovenIsFull;
 
   const consumeFlour = useCallback(() => {
@@ -64,6 +67,66 @@ export const App = () => {
     ]);
   }, [cannotPutCookieInOven]);
 
+  const handleCookieDispose = useCallback((cookieId) => {
+    setOvenCookies((cookies) =>
+      cookies.filter((cookie) => {
+        if (cookie.id !== cookieId) {
+          return true;
+        }
+        const status = getCookieStatus(cookie.insertedAt);
+        if (status && status.isSellable) {
+          setSellableCookiesCounter((value) => value + 1);
+        }
+        return false;
+      })
+    );
+  }, []);
+
+  const fillOvenWithCookies = useCallback(() => {
+    setOvenCookies((cookies) => {
+      const remainigCookieSlots = ovenCapacity - cookies.length;
+      const numberOfCookiesToPutInOven = Math.min(
+        remainigCookieSlots,
+        rawCookieCounter
+      );
+      const cookiesToPutInOven = Array.from(
+        { length: numberOfCookiesToPutInOven },
+        () => ({insertedAt: Date.now(), id: getNextId()})
+      );
+      setRawCookieCounter((value) => value - cookiesToPutInOven.length)
+      return [...cookies, ...cookiesToPutInOven];
+    });
+  })
+
+  useEffect(() => {
+    if (setRequestedCookiesNumber === 0) {
+      return;
+    }
+    if (reqestedCookiesNumber > sellableCookiesCounter) {
+      return;
+    }
+    const singleCookiePrice = setRequestedCookiesNumber > 5 ? 4 : 5;
+    setSellableCookiesCounter((value) => value - reqestedCookiesNumber);
+    setCash((prievious) => prievious + singleCookiePrice * reqestedCookiesNumber);
+    setRequestedCookiesNumber(0);
+  }, [reqestedCookiesNumber, sellableCookiesCounter])
+
+  useEffect(() => {
+    let id;
+
+    const tick = () => {
+      id = setTimeout(() => {
+        const randomSell = Math.floor(Math.random() * 9) + 1;
+        setRequestedCookiesNumber(randomSell);
+        tick();
+      }, Math.random() * 3000 + 3000);
+    };
+    tick();
+    return () => {
+      clearTimeout(id);
+    }
+  }, []);
+
   return (
     <div>
       <h1>React Bakery</h1>
@@ -86,10 +149,15 @@ export const App = () => {
         <button onClick={putCookieInOven} disabled={ovenIsFull}>
           Włóż ciastko do pieca
         </button>
-        {ovenIsFull && <span style={{color: "red"}}>Piec jest pełen</span>}
+        <button onClick={fillOvenWithCookies} disabled={ovenIsFull}>
+          Zapełnij piec
+        </button>
+        {ovenIsFull && <span style={{ color: "red" }}>Piec jest pełen</span>}
       </p>
       <p>Liczba ciastek w piecu: {ovenCookies.length}/9</p>
-      <Oven cookies={ovenCookies}/>
+      <Oven cookies={ovenCookies} onCookieDispose={handleCookieDispose} />
+      <p>Liczba gotowych ciastek: {sellableCookiesCounter}</p>
+      <p>Zarobiliśmy: {cash} PLN</p>
     </div>
   );
 };

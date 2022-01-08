@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Cookie } from "./Cookie";
 
+export const ovenCapacity = 9;
 
-export const Oven = ({ cookies }) => {
-  const [slots, setSlots] = useState(Array.from({length: 9}));
+export const Oven = ({ cookies, onCookieDispose }) => {
+  const [slots, setSlots] = useState(Array.from({length: ovenCapacity}));
 
   useEffect(() => {
     setSlots((slots) => {
@@ -11,7 +12,11 @@ export const Oven = ({ cookies }) => {
         slots.every((slot) => slot !== cookie)
       );
       return slots.map((slot) =>
-        slot === undefined ? cookiesWithNoSlots.pop() : slot
+        slot === undefined 
+        ? cookiesWithNoSlots.pop() 
+        : cookies.includes(slot)
+        ? slot
+        : undefined
       );
     })
   }, [cookies]);
@@ -39,6 +44,7 @@ export const Oven = ({ cookies }) => {
           {cookie && (
             <Cookie
               insertedAt={cookie.insertedAt}
+              onDispose={() => onCookieDispose(cookie.id)}
             />
           )}
         </div>
