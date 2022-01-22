@@ -1,70 +1,70 @@
-# Getting Started with Create React App
+# React Shop
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Celem tego zadania jest zbudowanie sklepu internetowego, w którym będzie można zakupić emotikony.
 
-## Available Scripts
+Asortyment sklepu znajduje się w pliku `products.json`.
 
-In the project directory, you can run:
+Po każdym kroku wykonaj commit. Decyzje o aplikacji stylów pozostawiam Waszemu poczuciu estetyki ;)
 
-### `npm start`
+## Krok 1
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Przygotuj szkielet aplikacji z użyciem `create-react-app`.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Krok 2
 
-### `npm test`
+Spraw, żeby Twoja aplikacja wyświetlała tylko nagłówek "React Emoji Shop".
+Zadbaj też o to, żeby tytuł zakładki w przeglądarce zawierał ten sam tekst.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Krok 3
 
-### `npm run build`
+Spraw, żeby na stronie pojawiła się lista produktów z pliku `products.json`. W tym celu:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- umieść ten plik w katalogu `public` (tam, gdzie znajduje się plik `index.html` aplikacji)
+  - dzięki temu będzie można pobrać ten plik za pomocą funkcji `fetch` odwołując się do
+    niego po adresie `http://localhost:3000/products.json` (zakładając oczywiście, że Twój
+    dev server chodzi na porcie 3000)
+- pobierz dane korzystając z hooka `useEffect` i zapisz je w stanie korzystając z settera
+  zwróconego z `useState`
+- użyj wartości stanu zwróconego z `useState`, żeby przemapować go na listę nazw produktów,
+  które pobraliśmy
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Krok 4
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Pod nazwą każdego z produktów wyświetl przycisk "pokaż szczegóły".
+Nie po kliknięciu w ten przycisk po prawej stronie listy pojawi się karta ze wszystkimi
+informacjami o danym produkcie:
 
-### `npm run eject`
+- nazwą
+- emotikonką (niech będzie wyraźnie większa od nazwy)
+- ceną (UWAGA: ceny są podane w groszach w PLN)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Krok 5
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Niech pod nagłówkiem na stronie pojawi się ikona koszyka (🛒) i napis: "liczba produktów w koszyku: 0"
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Krok 6
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Niech przycisk na kracie produktu po kliknięciu zwiększy licznik produktów w koszyku.
 
-## Learn More
+## Krok 7
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Niech kliknięcie w ikonę koszyka sprawi, że pojawi się pod nią lista produktów, które dodano do koszyka.
+Zwróć uwagę, że dane emoji można dodać do koszyka wiele razy.
+Niech elementy na tej liście wyświetlają się dokładnie w takiej kolejności jak zostały dodane do koszyka.
+Nie grupuj ich po rodzaju emoji.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Krok 8
 
-### Code Splitting
+Pod i nad listą produktów wyświetl informację o tym, jaka jest łączna cena całego koszyka.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Krok 9
 
-### Analyzing the Bundle Size
+Pod listą produktów Wyświetl przycisk "przejdź do podsumowania".
+Niech po jego kliknięciu lista produktów zostanie zgrupowana po rodzaju emoji - żeby na ekranie nie pojawiały się duplikaty.
+Naturalnie przycisk "przejdź do podsumowania" powinien zamienić się na przycisk "wróć do koszyka".
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Krok 10
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Niech obok przycisku "wróć do koszyka" pojawi się przycisk "zamów".
+Niech po jego kliknięciu zawartość koszyka zostanie usunięta.
+Niech na ekranie wyświetli się komunikat: "Serio? Naprawdę liczyłeś, że pozwolimy Ci kupić nasze emoji? Weź je po prostu skopiuj."
