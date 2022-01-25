@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import style from './style.module.css'
 import cart from './icons/cart.png'
 
-const Info = ({ product }) => {
+const Info = ({ product, click }) => {
   return (
     <div key={product.id} className={style.info}>
       <p>{product.name}</p>
@@ -11,6 +11,7 @@ const Info = ({ product }) => {
         {product.price.currency}
       </p>
       <p className={style.emot}>{product.item}</p>
+      <button onClick={click}>Add to cart</button>
     </div>
   );
 };
@@ -19,7 +20,11 @@ const Info = ({ product }) => {
 function App() {
   const [products, setProducts] = useState([]);
   const [infoDisplay, setInfoDisplay] = useState(null);
+  const [cartItems, setCartItems] = useState(0)
 
+  const handleClick = () => {
+    setCartItems(cartItems + 1);
+  }
   const selectedProduct = products.find(
     (product) => product.id === infoDisplay
   );
@@ -34,7 +39,7 @@ function App() {
       <h1>React Emoji Shop ≧◡≦</h1>
       <div className={style.cart}>
         <img src={cart}/>
-        <h2>Items in cart: 0</h2>
+        <h2>Items in cart: {cartItems}</h2>
       </div>
       <div className={style.products}>
         <ul>
@@ -54,7 +59,7 @@ function App() {
             );
           })}
         </ul>
-        {infoDisplay ? <Info product={selectedProduct} /> : null}
+        {infoDisplay ? <Info product={selectedProduct} click={handleClick}/> : null}
       </div>
     </div>
   );
