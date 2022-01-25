@@ -1,8 +1,17 @@
 .wrapper {
-  margin: 0;
+  margin-left: 10px;
   padding: 0;
 }
+.cart {
 
+  display: flex;
+  align-items: center;
+}
+img{
+  width: 30px;
+  height: 30px;
+  padding-right: 10px
+}
 .products {
   display: flex;
 }
@@ -12,10 +21,11 @@ li {
 }
 
 .info {
-  padding: 10px 100px;
+  padding: 10px 0px 0px 100px;
   font-size: 40px;
 }
 
 .emot {
+  margin-bottom: 0;
   font-size: 70px;
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import style from './style.module.css'
+import cart from './icons/cart.png'
 
 const Info = ({ product }) => {
   return (
@@ -13,6 +14,8 @@ const Info = ({ product }) => {
     </div>
   );
 };
+
+
 function App() {
   const [products, setProducts] = useState([]);
   const [infoDisplay, setInfoDisplay] = useState(null);
@@ -29,7 +32,10 @@ function App() {
   return (
     <div className={style.wrapper}>
       <h1>React Emoji Shop ≧◡≦</h1>
-      <h2>Products:</h2>
+      <div className={style.cart}>
+        <img src={cart}/>
+        <h2>Items in cart: 0</h2>
+      </div>
       <div className={style.products}>
         <ul>
           {products.map((product) => {
