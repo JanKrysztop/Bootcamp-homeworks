@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import style from './style.module.css'
-import cart from './icons/cart.png'
+import style from "./style.module.css";
+import cart from "./icons/cart.png";
+import { nanoid } from "nanoid";
 
 const Info = ({ product, click }) => {
   return (
@@ -16,31 +17,66 @@ const Info = ({ product, click }) => {
   );
 };
 
+const Cart = ({ cartList }) => {
+  return (
+    <div>
+      {cartList.map((item) => (
+        <p key={item.id}>
+          {item.name} {item.price}
+        </p>
+      ))}
+    </div>
+  );
+};
 
 function App() {
   const [products, setProducts] = useState([]);
   const [infoDisplay, setInfoDisplay] = useState(null);
-  const [cartItems, setCartItems] = useState(0)
+  const [cartItems, setCartItems] = useState(0);
+  const [displayCart, setDisplayCart] = useState(null);
+  const [cartList, setCartList] = useState([]);
 
-  const handleClick = () => {
-    setCartItems(cartItems + 1);
-  }
-  const selectedProduct = products.find(
-    (product) => product.id === infoDisplay
-  );
   useEffect(() => {
     fetch("http://localhost:3000/products.json")
       .then((res) => res.json())
       .then((data) => setProducts(data));
   }, []);
 
+  const handleCartDisplay = () => {
+    if (cartItems > 0) {
+      setDisplayCart(!displayCart);
+    }
+  };
+
+  function createCartItem(selectedProduct) {
+    const newItem = {
+      id: nanoid(),
+      name: selectedProduct.name,
+      item: selectedProduct.item,
+      price:
+        `${selectedProduct.price.value}` / 100 +
+        " " +
+        selectedProduct.price.currency,
+    };
+    setCartList([...cartList, newItem]);
+  }
+
+  const handleClick = () => {
+    createCartItem(selectedProduct);
+    setCartItems(cartItems + 1);
+  };
+  const selectedProduct = products.find(
+    (product) => product.id === infoDisplay
+  );
+
   return (
     <div className={style.wrapper}>
       <h1>React Emoji Shop ≧◡≦</h1>
       <div className={style.cart}>
-        <img src={cart}/>
+        <img src={cart} onClick={handleCartDisplay} />
         <h2>Items in cart: {cartItems}</h2>
       </div>
+      {displayCart ? <Cart cartList={cartList} /> : null}
       <div className={style.products}>
         <ul>
           {products.map((product) => {
@@ -59,7 +95,7 @@ function App() {
             );
           })}
         </ul>
-        {infoDisplay ? <Info product={selectedProduct} click={handleClick}/> : null}
+        {infoDisplay ? <Info product={selectedProduct} click={handleClick} /> : null}
       </div>
     </div>
   );
