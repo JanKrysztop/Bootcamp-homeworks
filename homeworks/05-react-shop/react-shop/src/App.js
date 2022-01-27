@@ -17,14 +17,18 @@ const Info = ({ product, click }) => {
   );
 };
 
-const Cart = ({ cartList }) => {
+const Cart = ({ cartList, totalCost }) => {
   return (
     <div>
+      <p>Total cost: {totalCost} PLN</p>
+      <ul>
       {cartList.map((item) => (
-        <p key={item.id}>
+        <li key={item.id}>
           {item.name} {item.price}
-        </p>
+        </li>
       ))}
+      </ul>
+      <p>Total cost: {totalCost} PLN</p>
     </div>
   );
 };
@@ -35,6 +39,7 @@ function App() {
   const [cartItems, setCartItems] = useState(0);
   const [displayCart, setDisplayCart] = useState(null);
   const [cartList, setCartList] = useState([]);
+  const [totalCost, setTotalCost] = useState(0);
 
   useEffect(() => {
     fetch("http://localhost:3000/products.json")
@@ -54,17 +59,20 @@ function App() {
       name: selectedProduct.name,
       item: selectedProduct.item,
       price:
-        `${selectedProduct.price.value}` / 100 +
+        selectedProduct.price.value / 100 +
         " " +
         selectedProduct.price.currency,
     };
     setCartList([...cartList, newItem]);
+    setTotalCost(parseFloat((totalCost + selectedProduct.price.value / 100).toFixed(2)))
   }
 
   const handleClick = () => {
     createCartItem(selectedProduct);
     setCartItems(cartItems + 1);
+    console.log(totalCost)
   };
+
   const selectedProduct = products.find(
     (product) => product.id === infoDisplay
   );
@@ -76,7 +84,7 @@ function App() {
         <img src={cart} onClick={handleCartDisplay} />
         <h2>Items in cart: {cartItems}</h2>
       </div>
-      {displayCart ? <Cart cartList={cartList} /> : null}
+      {displayCart ? <Cart cartList={cartList} totalCost={totalCost}/> : null}
       <div className={style.products}>
         <ul>
           {products.map((product) => {
