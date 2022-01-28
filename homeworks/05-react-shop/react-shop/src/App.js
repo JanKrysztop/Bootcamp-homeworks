@@ -2,36 +2,9 @@ import { useState, useEffect } from "react";
 import style from "./style.module.css";
 import cart from "./icons/cart.png";
 import { nanoid } from "nanoid";
+import Cart from "./components/Cart";
+import Info from "./components/Info";
 
-const Info = ({ product, click }) => {
-  return (
-    <div key={product.id} className={style.info}>
-      <p>{product.name}</p>
-      <p>
-        {`${product.price.value}` / 100 + " "}
-        {product.price.currency}
-      </p>
-      <p className={style.emot}>{product.item}</p>
-      <button onClick={click}>Add to cart</button>
-    </div>
-  );
-};
-
-const Cart = ({ cartList, totalCost }) => {
-  return (
-    <div>
-      <p>Total cost: {totalCost} PLN</p>
-      <ul>
-      {cartList.map((item) => (
-        <li key={item.id}>
-          {item.name} {item.price}
-        </li>
-      ))}
-      </ul>
-      <p>Total cost: {totalCost} PLN</p>
-    </div>
-  );
-};
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -40,6 +13,7 @@ function App() {
   const [displayCart, setDisplayCart] = useState(null);
   const [cartList, setCartList] = useState([]);
   const [totalCost, setTotalCost] = useState(0);
+  const [cartView, setCartView] = useState(true);
 
   useEffect(() => {
     fetch("http://localhost:3000/products.json")
@@ -51,6 +25,9 @@ function App() {
     if (cartItems > 0) {
       setDisplayCart(!displayCart);
     }
+  };
+  const handleCartView = () => {
+    setCartView(!cartView);
   };
 
   function createCartItem(selectedProduct) {
@@ -64,14 +41,27 @@ function App() {
         selectedProduct.price.currency,
     };
     setCartList([...cartList, newItem]);
-    setTotalCost(parseFloat((totalCost + selectedProduct.price.value / 100).toFixed(2)))
+    setTotalCost(
+      parseFloat((totalCost + selectedProduct.price.value / 100).toFixed(2))
+    );
   }
 
   const handleClick = () => {
     createCartItem(selectedProduct);
     setCartItems(cartItems + 1);
-    console.log(totalCost)
+    console.log();
   };
+
+  const groupBy = (key, arr) =>
+    arr.reduce((cache, product) => {
+      const property = product[key];
+      if (property in cache) {
+        return { ...cache, [property]: cache[property].concat(product) };
+      }
+      return { ...cache, [property]: [product] };
+    }, {});
+
+  const sortedCart = groupBy("item", cartList);
 
   const selectedProduct = products.find(
     (product) => product.id === infoDisplay
@@ -84,7 +74,15 @@ function App() {
         <img src={cart} onClick={handleCartDisplay} />
         <h2>Items in cart: {cartItems}</h2>
       </div>
-      {displayCart ? <Cart cartList={cartList} totalCost={totalCost}/> : null}
+      {displayCart ? (
+        <Cart
+          cartList={cartList}
+          totalCost={totalCost}
+          sortedCart={sortedCart}
+          handleCartView={handleCartView}
+          cartView={cartView}
+        />
+      ) : null}
       <div className={style.products}>
         <ul>
           {products.map((product) => {
@@ -103,7 +101,9 @@ function App() {
             );
           })}
         </ul>
-        {infoDisplay ? <Info product={selectedProduct} click={handleClick} /> : null}
+        {infoDisplay ? (
+          <Info product={selectedProduct} click={handleClick} />
+        ) : null}
       </div>
     </div>
   );
