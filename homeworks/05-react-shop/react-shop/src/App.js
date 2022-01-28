@@ -5,6 +5,15 @@ import { nanoid } from "nanoid";
 import Cart from "./components/Cart";
 import Info from "./components/Info";
 
+const Message = () => {
+  return (
+    <>
+    <h2>Seriously? Did you really expect us to let you buy our emojis?</h2>
+    <h2>Just copy them...</h2>
+    </>
+  )
+}
+
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -14,6 +23,7 @@ function App() {
   const [cartList, setCartList] = useState([]);
   const [totalCost, setTotalCost] = useState(0);
   const [cartView, setCartView] = useState(true);
+  const [message, setMessage] = useState(false)
 
   useEffect(() => {
     fetch("http://localhost:3000/products.json")
@@ -22,7 +32,7 @@ function App() {
   }, []);
 
   const handleCartDisplay = () => {
-    if (cartItems > 0) {
+    if (cartItems >= 0) {
       setDisplayCart(!displayCart);
     }
   };
@@ -49,7 +59,6 @@ function App() {
   const handleClick = () => {
     createCartItem(selectedProduct);
     setCartItems(cartItems + 1);
-    console.log();
   };
 
   const groupBy = (key, arr) =>
@@ -67,9 +76,21 @@ function App() {
     (product) => product.id === infoDisplay
   );
 
+  const placeOrder = () => {
+    setCartList([]);
+    setCartItems(0);
+    setTotalCost(0);
+    handleMessage();
+  }
+
+  const handleMessage = () => {
+    setMessage(!message)
+  }
+
   return (
     <div className={style.wrapper}>
       <h1>React Emoji Shop ≧◡≦</h1>
+      {message ? <Message /> : null}
       <div className={style.cart}>
         <img src={cart} onClick={handleCartDisplay} />
         <h2>Items in cart: {cartItems}</h2>
@@ -81,6 +102,8 @@ function App() {
           sortedCart={sortedCart}
           handleCartView={handleCartView}
           cartView={cartView}
+          placeOrder={placeOrder}
+          handleMessage={handleMessage}
         />
       ) : null}
       <div className={style.products}>
