@@ -18,10 +18,9 @@ const Message = () => {
 function App() {
   const [products, setProducts] = useState([]);
   const [infoDisplay, setInfoDisplay] = useState(null);
-  const [cartItems, setCartItems] = useState(0);
   const [displayCart, setDisplayCart] = useState(null);
   const [cartList, setCartList] = useState([]);
-  const [totalCost, setTotalCost] = useState(0);
+  
   const [cartView, setCartView] = useState(true);
   const [message, setMessage] = useState(false)
 
@@ -32,7 +31,7 @@ function App() {
   }, []);
 
   const handleCartDisplay = () => {
-    if (cartItems >= 0) {
+    if (cartList.length >= 0) {
       setDisplayCart(!displayCart);
     }
   };
@@ -43,22 +42,13 @@ function App() {
   function createCartItem(selectedProduct) {
     const newItem = {
       id: nanoid(),
-      name: selectedProduct.name,
-      item: selectedProduct.item,
-      price:
-        selectedProduct.price.value / 100 +
-        " " +
-        selectedProduct.price.currency,
+      cartItem: selectedProduct,
     };
     setCartList([...cartList, newItem]);
-    setTotalCost(
-      parseFloat((totalCost + selectedProduct.price.value / 100).toFixed(2))
-    );
   }
 
   const handleClick = () => {
     createCartItem(selectedProduct);
-    setCartItems(cartItems + 1);
   };
 
   const groupBy = (key, arr) =>
@@ -71,6 +61,7 @@ function App() {
     }, {});
 
   const sortedCart = groupBy("item", cartList);
+  const groupedItems = Object.entries(sortedCart).map(([key, items]) => ({ key, item: items[0], quantity: items.length }))
 
   const selectedProduct = products.find(
     (product) => product.id === infoDisplay
@@ -78,8 +69,6 @@ function App() {
 
   const placeOrder = () => {
     setCartList([]);
-    setCartItems(0);
-    setTotalCost(0);
     handleMessage();
   }
 
@@ -93,17 +82,16 @@ function App() {
       {message ? <Message /> : null}
       <div className={style.cart}>
         <img src={cart} onClick={handleCartDisplay} />
-        <h2>Items in cart: {cartItems}</h2>
+        <h2>Items in cart: {cartList.length}</h2>
       </div>
       {displayCart ? (
         <Cart
           cartList={cartList}
-          totalCost={totalCost}
-          sortedCart={sortedCart}
+          sortedCart={groupedItems}
           handleCartView={handleCartView}
           cartView={cartView}
           placeOrder={placeOrder}
-          handleMessage={handleMessage}
+         
         />
       ) : null}
       <div className={style.products}>

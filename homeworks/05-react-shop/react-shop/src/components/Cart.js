@@ -1,56 +1,42 @@
+import { useMemo } from "react";
+const formatPrice = ({ value, currency }) => `${(value/100).toFixed(2)} ${currency}`
+
 const Cart = ({
   cartList,
-  totalCost,
   sortedCart,
   handleCartView,
   cartView,
   placeOrder,
-  handleMessage,
 }) => {
+  const totalCost = useMemo(() => {
+    return cartList.map(item => item.cartItem.price.value ).reduce((total, next) => total + next, 0)
+  }, [cartList])
+
+  const costDisplay =  <p>Total cost: {formatPrice({ value: totalCost, currency: 'PLN'})}</p>
   return (
     <>
       {cartView ? (
         <div>
-          <p>Total cost: {totalCost} PLN</p>
+         {costDisplay}
           <ul>
-            {cartList.map((item) => (
-              <li key={item.id}>
-                {item.name} {item.price}
+            {cartList.map(({ id, cartItem: { name, price } }) => (
+              <li key={id}>
+                {name} {formatPrice(price)}
               </li>
             ))}
           </ul>
-          <p>Total cost: {totalCost} PLN</p>
+         {costDisplay}
           <button onClick={handleCartView}>Summary</button>
         </div>
       ) : (
         <div>
           <ul>
-            <li>
-              {Object.keys(sortedCart)[0]}
-              {/* x{Object.values(sortedCart)[0].length} */}
-            </li>
-            <li>
-              {Object.keys(sortedCart)[1]}
-              {/* x{Object.values(sortedCart)[1].length} */}
-            </li>
-            <li>
-              {Object.keys(sortedCart)[2]}
-              {/* x{Object.values(sortedCart)[2].length} */}
-            </li>
-            <li>
-              {Object.keys(sortedCart)[3]}
-              {/* x{Object.values(sortedCart)[3].length} */}
-            </li>
-            <li>
-              {Object.keys(sortedCart)[4]}
-              {/* x{Object.values(sortedCart)[4].length} */}
-            </li>
-            <li>
-              {Object.keys(sortedCart)[5]}
-              {/* x{Object.values(sortedCart)[5].length} */}
-            </li>
+            {sortedCart.map(({ key, item, quantity }) => {
+              console.log(item)
+              return <li key={key}>{item.cartItem.name} x{quantity}</li>
+            })}
           </ul>
-          <p>Total cost: {totalCost} PLN</p>
+          {costDisplay}
           <button onClick={handleCartView}>Cart</button>
           <button onClick={placeOrder}>Place Order</button>
         </div>
